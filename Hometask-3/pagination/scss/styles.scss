@@ -1,0 +1,79 @@
+@import url(https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.8/css/bootstrap-reboot.min.css);
+body {
+    box-sizing: border-box;
+}
+p {
+    margin-bottom: 0;
+}
+.title {
+    text-align: center;
+}
+
+.main {
+    padding: 20px 3% 40px 3%;
+    // padding-bottom: 40px;
+}
+
+.wrapper {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 20px;
+    padding: 20px;
+}
+
+.img {
+    border-radius: 8px;
+}
+
+.buttons {
+    margin-top: 20px;
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+}
+
+.btn {
+    width: 100px;
+    font-size: 16px;
+    padding: 5px 10px;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    background-color: #ebeb39;
+    &:disabled {
+        cursor: unset;
+        &:hover {
+            background-color: #ebeb39;
+        }
+    }
+    &:hover {
+        background-color: #ec5a5a;
+        transition: 0.6s all;
+    }
+}
+
+.current-page {
+    padding: 5px;
+    border-radius: 4px;
+    border: 2px solid black;
+}
+
+.character {
+    padding: 10px;
+    border: 1px solid black;
+    border-radius: 8px;
+    &__desc {
+        margin-top: 10px;
+    }
+    &__field {
+        font-weight: 700;
+    }
+    img {
+        width: 100%;
+        border-radius: 10px;
+    }
+}
+
+.loading {
+    text-align: center;
+}
