@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="css/styles.min.css">
+    <title>Pagination</title>
+</head>
+
+<body>
+    <div class="main">
+        <h1 class="title">Rick and Morty characters</h1>
+        <div class="wrapper">
+            <div class="wrapper__char">
+
+            </div>
+            <div class="loading">Loading...</div>
+        </div>
+        <div class="buttons">
+            <button class=" btn btn__prev" data-page="prev" data-event="pagination">Previous</button>
+            <div class="current-page"></div>
+            <button class="btn btn__next" data-page="next" data-event="pagination">Next</button>
+
+        </div>
+    </div>
+
+    <div class="modal">
+        <div class="modal__content">
+
+        </div>
+        <button class="modal__close" data-event="close">Close</button>
+    </div>
+
+    <div class="overlay"></div>
+
+    <!-- <button class="btn__load">Load more</button> -->
+
+    <div class="scroll"></div>
+    <script src="index.js"></script>
+</body>
+
+</html>
