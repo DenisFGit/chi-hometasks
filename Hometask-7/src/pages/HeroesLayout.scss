@@ -1,0 +1,20 @@
+.heroes-layout {
+    width: 100%;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    height: 100vh;
+}
+
+.heroes-layout-location {
+    grid-template-columns: 1fr;
+}
+
+.heroes-layout__list {
+    border-right: 1px solid #ddd;
+    overflow: auto;
+}
+
+.heroes-layout__details {
+    background: #fafafa;
+    overflow: auto;
+}
