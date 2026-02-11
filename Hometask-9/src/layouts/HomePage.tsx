@@ -1,8 +1,8 @@
 
 import { useEffect, useState } from "react";
+import { logout } from "../store/slices/userSlice";
 
 import { useAppDispatch } from "../store/hooks";
-import { logout } from "../store/slices/userSlice";
 
 import apiClient from "../api/axiosInstance";
 

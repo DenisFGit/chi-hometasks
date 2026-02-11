@@ -1,7 +1,7 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
 // import { AxiosError } from 'axios';
 
-import { getAllExhibits, createPost } from '../../api/exhibitActions';
+import { getAllExhibits, createPost, getMyExhibits } from '../../api/exhibitActions';
 
 import type { Post } from '../../api/exhibitActions';
 
@@ -28,8 +28,8 @@ export interface ExhibitState {
     isLoading: boolean;
     error: boolean | null;
 
-    page: number;
-    totalPages: number;
+    // page: number;
+    // totalPages: number;
 }
 
 const initialState: ExhibitState = {
@@ -40,13 +40,24 @@ const initialState: ExhibitState = {
     isLoading: false,
     error: null,
 
-    page: 1,
-    totalPages: 1,
+    // page: 1,
+    // totalPages: 1,
 };
 
 export const fetchPosts = createAsyncThunk('exhibits/fetchAll', async (page: number) => {
     try {
         const res = await getAllExhibits(page);
+
+        console.log(res.data);
+        return res.data;
+    } catch (error) {
+        console.log('Error:' + error);
+    }
+});
+
+export const fetchMyPosts = createAsyncThunk('exhibits/fetchMyPosts', async (page: number) => {
+    try {
+        const res = await getMyExhibits(page);
 
         console.log(res.data);
         return res.data;
@@ -84,6 +95,16 @@ const exhibitSlice = createSlice({
     name: 'exhibits',
     initialState,
     reducers: {
+        // nextPage(state) {
+        //     if (state.page < state.totalPages) {
+        //         state.page += 1;
+        //     }
+        // },
+        // prevPage(state) {
+        //     if (state.page > 1) {
+        //         state.page -= 1;
+        //     }
+        // },
 
     },
     extraReducers: (builder) => {
@@ -97,9 +118,25 @@ const exhibitSlice = createSlice({
             .addCase(fetchPosts.fulfilled, (state, action) => {
                 state.isLoading = false;
                 state.items = action.payload.data;
+                // state.page = +action.payload.page;
+                // state.totalPages = action.payload.lastPage;
+                // console.log(state.totalPages);
+                // console.log(typeof (state.page));
             })
             .addCase(fetchPosts.rejected, (state) => {
                 state.error = true;
+            })
+
+            //Get my posts
+
+            .addCase(fetchMyPosts.pending, (state) => {
+                state.isLoading = true;
+                state.error = null;
+            })
+
+            .addCase(fetchMyPosts.fulfilled, (state, action) => {
+                state.isLoading = false;
+                state.myItems = action.payload.data;
             })
 
             // Create post
@@ -120,4 +157,5 @@ const exhibitSlice = createSlice({
 
 })
 
+// export const { nextPage, prevPage } = exhibitSlice.actions;
 export default exhibitSlice.reducer;

@@ -33,19 +33,23 @@ function App() {
 
   return (
     <div className="app">
+
       <Router>
         <Navigation />
-        <Routes>
-          <Route path="/login" element={<LoginPage />} />
-          <Route path="/register" element={<RegisterPage />} />
-
-          <Route element={<ProtectedRoute isAllowed={isAuthenticated} />}>
-            <Route path='/home' element={<HomePage />} />
-            <Route path='/new-post' element={<NewPost />} />
+        <div className="container">
+          <Routes>
+            <Route path="/login" element={<LoginPage />} />
+            <Route path="/register" element={<RegisterPage />} />
             <Route path='/' element={<StripePage />} />
-          </Route>
-        </Routes>
+
+            <Route element={<ProtectedRoute isAllowed={isAuthenticated} />}>
+              <Route path='/home' element={<HomePage />} />
+              <Route path='/new-post' element={<NewPost />} />
+            </Route>
+          </Routes>
+        </div>
       </Router>
+
     </div>
   )
 }
