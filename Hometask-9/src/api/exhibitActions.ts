@@ -13,6 +13,6 @@ export const createPost = (post: FormData) =>
     apiClient.post("/api/exhibits", post);
 
 export const getMyExhibits = (page = 1, limit = 10) => {
-    return apiClient.post(`/api/exhibits/my-posts?page=${page}&limit=${limit}`)
+    return apiClient.get(`/api/exhibits/my-posts?page=${page}&limit=${limit}`)
 }
 

@@ -1,7 +1,11 @@
 
 const Comment = () => {
     return (
-        <div>Comment</div>
+        <div>
+            <p>CreateAt: date</p>
+            <p>user: username</p>
+            <p>text: text</p>
+        </div>
     )
 }
 
