@@ -15,3 +15,5 @@ export const login = (data: LoginDto) =>
 
 export const register = (data: RegisterDto) =>
     apiClient.post("/users/register", data);
+
+export const getMe = () => apiClient.get('/users/my-profile');

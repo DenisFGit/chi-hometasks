@@ -1,11 +1,8 @@
 import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
-
 import { fetchPosts } from "../store/slices/exhibitSlices";
 import { useAppDispatch, useAppSelector } from "../store/hooks";
-
 import { Box } from "@mui/material";
-
 import Pagination from "../components/Pagination";
 import Post from "../components/Post";
 import "./StripePage.scss";
@@ -38,24 +35,35 @@ const StripePage = () => {
         fetchExhibits();
     }, [pageNum, dispatch]);
 
+
+    if (isLoading) {
+        return (
+            <Box sx={{ textAlign: 'center', fontSize: '30px' }}>
+                Loading exhibits...
+            </Box>
+        );
+    }
+
+    if (!posts || posts.length === 0) {
+        return (
+            <div className="stripe">
+                <h1 className="stripe__title">StripePage</h1>
+                There are no exhibits available
+            </div>
+        );
+    }
+
     return (
         <div className="stripe">
             <h1 className="stripe__title">StripePage</h1>
 
             <Pagination pageNum={pageNum} lastPage={lastPage} changePage={changePage} />
-            {isLoading
-                ? <Box sx={{
-                    textAlign: 'center',
-                    fontSize: '30px'
-                }}>
-                    Loading exhibits...
-                </Box>
-                : <div className="stripe__content">
-                    {posts?.map((item) => (
-                        <Post key={item.id} item={item} />
-                    ))}
-                </div>}
 
+            <div className="stripe__content">
+                {posts.map((item) => (
+                    <Post key={item.id} item={item} />
+                ))}
+            </div>
 
             <Pagination pageNum={pageNum} lastPage={lastPage} changePage={changePage} />
         </div>

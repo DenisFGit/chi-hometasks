@@ -1,14 +1,10 @@
 
 import { registerUser } from "../store/slices/userSlice";
 import { useAppDispatch } from "../store/hooks";
-
 import { useNavigate } from "react-router-dom";
-
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
-
 import RegisterForm from "../components/RegisterForm";
-
 import { Typography, Box } from "@mui/material";
 
 const RegisterPage = () => {

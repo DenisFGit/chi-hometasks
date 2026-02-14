@@ -6,10 +6,11 @@ import StripePage from './layouts/StripePage';
 
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { Navigate, Outlet } from "react-router-dom";
-
 import Navigation from "./components/Navigation";
 
-import { useAppSelector } from './store/hooks';
+import { useAppSelector, useAppDispatch } from './store/hooks';
+import { useEffect } from 'react';
+import { fetchCurrentUser } from './store/slices/userSlice';
 
 import './App.css'
 
@@ -27,9 +28,19 @@ function ProtectedRoute({ isAllowed }: ProtectedRouteProps) {
 
 function App() {
 
+  const dispatch = useAppDispatch();
+
   const isAuthenticated = useAppSelector(
     (state) => Boolean(state.user.token)
   );
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      dispatch(fetchCurrentUser())
+    }
+  }, [isAuthenticated, dispatch]);
+
+
 
   return (
     <div className="app">

@@ -1,9 +1,9 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
 import { AxiosError } from 'axios';
-import { login, register } from '../../api/userActions.ts';
+import { login, register, getMe } from '../../api/userActions.ts';
 
 export interface User {
-    id: string;
+    id: number;
     name: string;
 }
 
@@ -57,6 +57,19 @@ export const registerUser = createAsyncThunk(
     }
 );
 
+export const fetchCurrentUser = createAsyncThunk(
+    "user/me",
+    async (_, { rejectWithValue }) => {
+        try {
+            const res = await getMe();
+            return res.data;
+        } catch (error) {
+            console.log("Error: " + error);
+            return rejectWithValue("Not authorized");
+        }
+    }
+);
+
 const userSlice = createSlice({
     name: "user",
     initialState,
@@ -81,10 +94,12 @@ const userSlice = createSlice({
             })
             .addCase(loginUser.fulfilled, (state, action) => {
                 state.isLoading = false;
+                // console.log(action);
                 state.user = {
                     id: action.payload.userId,
                     name: action.payload.userName
                 }
+                console.log(state.user);
                 state.token = action.payload.access_token;
             })
             .addCase(loginUser.rejected, (state, action) => {
@@ -108,7 +123,23 @@ const userSlice = createSlice({
             .addCase(registerUser.rejected, (state, action) => {
                 state.isLoading = false;
                 state.error = action.payload as string;
-            });
+            })
+
+            //Get my-profile
+
+            .addCase(fetchCurrentUser.pending, (state) => {
+                state.isLoading = true;
+            })
+            .addCase(fetchCurrentUser.fulfilled, (state, action) => {
+                state.isLoading = false;
+                state.user = action.payload;
+            })
+            .addCase(fetchCurrentUser.rejected, (state) => {
+                state.isLoading = false;
+                state.user = null;
+                state.token = null;
+            })
+
     },
 });
 

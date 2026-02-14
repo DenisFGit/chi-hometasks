@@ -1,11 +1,33 @@
+import { Box } from "@mui/material"
 
-const Comment = () => {
+interface CommentUser {
+    id: number,
+    username: string
+}
+
+interface Props {
+    comment: {
+        id: number,
+        createdAt: string,
+        text: string,
+        user: CommentUser
+
+    }
+}
+
+const Comment = ({ comment }: Props) => {
     return (
-        <div>
-            <p>CreateAt: date</p>
-            <p>user: username</p>
-            <p>text: text</p>
-        </div>
+        <Box sx={{
+            bgcolor: 'pink',
+            padding: '8px',
+            borderRadius: '8px',
+        }}>
+            <p>CreateAt: {comment.createdAt}</p>
+            <Box>
+                <p>User: {comment.user.username}</p>
+                <p>Description: {comment.text}</p>
+            </Box>
+        </Box>
     )
 }
 

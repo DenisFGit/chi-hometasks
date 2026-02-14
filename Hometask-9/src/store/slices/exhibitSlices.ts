@@ -1,18 +1,15 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
-// import { AxiosError } from 'axios';
-
-import { getAllExhibits, createPost, getMyExhibits } from '../../api/exhibitActions';
-
+import { getAllExhibits, getMyExhibits, createPost, deleteExhibit } from '../../api/exhibitActions';
 import type { Post } from '../../api/exhibitActions';
+import { AxiosError } from 'axios';
 
-
-interface User {
+export interface User {
     id: number,
     username: string
 }
 
 export interface Exhibit {
-    id: string;
+    id: number;
     imageUrl: string,
     description: string;
     user: User,
@@ -21,15 +18,12 @@ export interface Exhibit {
 }
 
 export interface ExhibitState {
-    items: Exhibit[];          // всі експонати
-    myItems: Exhibit[];        // мої експонати
-    current: Exhibit | null;   // експонат за id
+    items: Exhibit[];
+    myItems: Exhibit[];
+    current: Exhibit | null;
 
     isLoading: boolean;
     error: boolean | null;
-
-    // page: number;
-    // totalPages: number;
 }
 
 const initialState: ExhibitState = {
@@ -39,9 +33,6 @@ const initialState: ExhibitState = {
 
     isLoading: false,
     error: null,
-
-    // page: 1,
-    // totalPages: 1,
 };
 
 export const fetchPosts = createAsyncThunk('exhibits/fetchAll', async (page: number) => {
@@ -67,7 +58,6 @@ export const fetchMyPosts = createAsyncThunk('exhibits/fetchMyPosts', async (pag
 });
 
 
-
 export const sendPost = createAsyncThunk(
     'exhibits/sendPost',
     async (post: Post) => {
@@ -89,22 +79,33 @@ export const sendPost = createAsyncThunk(
     }
 )
 
+export const deletePost = createAsyncThunk<number, number>(
+    "exhibits/deletePost",
+    async (id, { rejectWithValue }) => {
+        try {
+            await deleteExhibit(id);
+            return id;
+        } catch (error) {
+            const err = error as AxiosError<{ message: string }>;
+            return rejectWithValue(err.response?.data || "Failed to delete");
+        }
+    }
+);
 
 
 const exhibitSlice = createSlice({
     name: 'exhibits',
     initialState,
     reducers: {
-        // nextPage(state) {
-        //     if (state.page < state.totalPages) {
-        //         state.page += 1;
-        //     }
-        // },
-        // prevPage(state) {
-        //     if (state.page > 1) {
-        //         state.page -= 1;
-        //     }
-        // },
+        incrementCommentCount: (state, action: { payload: number }) => {
+            const postId = action.payload;
+
+            const post = state.items.find((p) => p.id === postId);
+            if (post) post.commentCount += 1;
+
+            const myPost = state.myItems.find((p) => p.id === postId);
+            if (myPost) myPost.commentCount += 1;
+        },
 
     },
     extraReducers: (builder) => {
@@ -118,10 +119,6 @@ const exhibitSlice = createSlice({
             .addCase(fetchPosts.fulfilled, (state, action) => {
                 state.isLoading = false;
                 state.items = action.payload.data;
-                // state.page = +action.payload.page;
-                // state.totalPages = action.payload.lastPage;
-                // console.log(state.totalPages);
-                // console.log(typeof (state.page));
             })
             .addCase(fetchPosts.rejected, (state) => {
                 state.error = true;
@@ -153,9 +150,25 @@ const exhibitSlice = createSlice({
                 state.error = true;
             })
 
+            // Delete post
+            .addCase(deletePost.pending, (state) => {
+                state.isLoading = true;
+                state.error = null;
+            })
+            .addCase(deletePost.fulfilled, (state, action) => {
+                state.isLoading = false;
+                console.log(action);
+                state.items = state.items.filter(item => item.id !== action.payload);
+                state.myItems = state.myItems.filter(item => item.id !== action.payload);
+            })
+            .addCase(deletePost.rejected, (state) => {
+                state.isLoading = false;
+                state.error = true;
+            });
+
     }
 
 })
 
-// export const { nextPage, prevPage } = exhibitSlice.actions;
+export const { incrementCommentCount } = exhibitSlice.actions;
 export default exhibitSlice.reducer;

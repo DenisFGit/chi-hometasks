@@ -1,19 +1,19 @@
 'use client'
 import { Link } from 'react-router-dom';
-
 import { logout } from '../store/slices/userSlice';
-import { useAppDispatch } from "../store/hooks";
-
+import { useAppDispatch, useAppSelector } from "../store/hooks";
 import { Box, Button } from '@mui/material';
-
 import './Navigation.scss';
 
 const Navigation = () => {
 
     const dispatch = useAppDispatch();
 
+    const isAuthenticated = useAppSelector(
+        (state) => Boolean(state.user.token)
+    );
+
     return (
-        // <div className='nav'>
         <Box sx={{
             position: 'fixed',
             width: '100%',
@@ -41,19 +41,32 @@ const Navigation = () => {
                     <Link to='/'>Stripe</Link>
                 </li>
             </ul>
-            <Button className="nav__btn" onClick={() => dispatch(logout())}
-                sx={{
-                    backgroundColor: 'white',
-                    fontWeight: 700,
-                    color: 'black',
-                    '&:hover': {
-                        backgroundColor: '#CDEDF7'
-                    }
-                }}
-            >Log out</Button>
+            {isAuthenticated
+                ? <Button className="nav__btn" onClick={() => dispatch(logout())}
+                    sx={{
+                        backgroundColor: 'white',
+                        fontWeight: 700,
+                        color: 'black',
+                        '&:hover': {
+                            backgroundColor: '#CDEDF7'
+                        }
+                    }}
+                >Log out
+                </Button>
+                : <Link to='/login'>
+                    <Button className="nav__btn"
+                        sx={{
+                            backgroundColor: 'white',
+                            fontWeight: 700,
+                            color: 'black',
+                            '&:hover': {
+                                backgroundColor: '#CDEDF7'
+                            }
+                        }}
+                    >Log in</Button>
+                </Link>}
         </Box>
 
-        // </div>
     )
 }
 
