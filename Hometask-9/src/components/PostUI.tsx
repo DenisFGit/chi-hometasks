@@ -91,7 +91,6 @@ const PostUI = ({ item, onShowComments, handleDeletePost, comments, user, newCom
 
             {user && (
                 <>
-                    {/* Show add comment error */}
                     {addCommentError && (
                         <Box sx={{ marginTop: "10px" }}>
                             {addCommentError}

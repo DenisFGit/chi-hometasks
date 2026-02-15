@@ -7,7 +7,6 @@ interface Props {
         createdAt: string,
         text: string,
         user: User
-
     }
 }
 

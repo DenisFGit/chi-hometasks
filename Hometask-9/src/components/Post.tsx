@@ -41,7 +41,7 @@ const Post = ({ item }: Props) => {
 
         if (!comments || comments.length === 0) {
             setIsLoadingComments(true);
-            setFetchError(null); // Clear previous errors
+            setFetchError(null);
 
             try {
                 await dispatch(fetchComments(id)).unwrap();
@@ -56,8 +56,8 @@ const Post = ({ item }: Props) => {
 
     const handleDeletePost = (id: number) => {
         try {
-            const res = dispatch(deletePost(id)).unwrap()
-            console.log(res);
+            dispatch(deletePost(id)).unwrap()
+
         } catch (error) {
             console.log('Error: ' + error);
         }
@@ -66,7 +66,7 @@ const Post = ({ item }: Props) => {
 
     const handleAddComment = async () => {
         if (!newComment.trim()) return;
-        setAddCommentError(null); // Clear previous errors
+        setAddCommentError(null);
         try {
             await dispatch(addComment({ postId: item.id, text: newComment })).unwrap();
             dispatch(incrementCommentCount(item.id));
