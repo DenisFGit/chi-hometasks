@@ -81,7 +81,7 @@ const HomePage = () => {
 
             <Pagination pageNum={pageNum} lastPage={lastPage} changePage={changePage} />
 
-            <div className="stripe__content">
+            <div className="home__content">
                 {posts.map((item) => (
                     <Post key={item.id} item={item} />
                 ))}
