@@ -96,7 +96,6 @@ const userSlice = createSlice({
                     id: action.payload.userId,
                     username: action.payload.userName
                 }
-                console.log(state.user);
                 state.token = action.payload.access_token;
             })
             .addCase(loginUser.rejected, (state, action) => {
