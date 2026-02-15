@@ -2,7 +2,8 @@ import { useState } from "react";
 import { useAppDispatch, useAppSelector } from "../store/hooks";
 import { fetchComments, addComment } from "../store/slices/commentSlice";
 import { deletePost } from "../store/slices/exhibitSlices";
-import type { User } from "../store/slices/exhibitSlices";
+import { incrementCommentCount } from "../store/slices/exhibitSlices";
+import type { User } from '../store/slices/userSlice'
 
 import PostUI from "./PostUI";
 
@@ -30,12 +31,18 @@ const Post = ({ item }: Props) => {
 
     const [isOpen, setIsOpen] = useState(false);
     const [newComment, setNewComment] = useState("");
+    const [isLoadingComments, setIsLoadingComments] = useState(false);
 
-    const handleComments = (id: number) => {
+    const handleComments = async (id: number) => {
         setIsOpen((prev) => !prev);
 
         if (!comments || comments.length === 0) {
-            dispatch(fetchComments(id));
+            setIsLoadingComments(true);
+            try {
+                await dispatch(fetchComments(id)).unwrap();
+            } finally {
+                setIsLoadingComments(false);
+            }
         }
     };
 
@@ -54,6 +61,7 @@ const Post = ({ item }: Props) => {
 
         try {
             await dispatch(addComment({ postId: item.id, text: newComment })).unwrap();
+            dispatch(incrementCommentCount(item.id));
             setNewComment("");
         } catch (error) {
             console.log("Failed to add comment:", error);
@@ -70,6 +78,7 @@ const Post = ({ item }: Props) => {
             newComment={newComment}
             setNewComment={setNewComment}
             handleAddComment={handleAddComment}
+            isLoadingComments={isLoadingComments}
         />
     );
 };

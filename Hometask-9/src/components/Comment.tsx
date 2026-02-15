@@ -1,28 +1,28 @@
 import { Box } from "@mui/material"
-
-interface CommentUser {
-    id: number,
-    username: string
-}
+import type { User } from '../store/slices/userSlice';
 
 interface Props {
     comment: {
         id: number,
         createdAt: string,
         text: string,
-        user: CommentUser
+        user: User
 
     }
 }
 
 const Comment = ({ comment }: Props) => {
+
+    const formattedDate = new Date(comment.createdAt).toLocaleString();
+
+
     return (
         <Box sx={{
             bgcolor: 'pink',
             padding: '8px',
             borderRadius: '8px',
         }}>
-            <p>CreateAt: {comment.createdAt}</p>
+            <p>Created: {formattedDate}</p>
             <Box>
                 <p>User: {comment.user.username}</p>
                 <p>Description: {comment.text}</p>

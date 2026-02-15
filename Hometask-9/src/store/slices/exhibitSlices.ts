@@ -2,11 +2,7 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
 import { getAllExhibits, getMyExhibits, createPost, deleteExhibit } from '../../api/exhibitActions';
 import type { Post } from '../../api/exhibitActions';
 import { AxiosError } from 'axios';
-
-export interface User {
-    id: number,
-    username: string
-}
+import type { User } from './userSlice';
 
 export interface Exhibit {
     id: number;
@@ -39,7 +35,6 @@ export const fetchPosts = createAsyncThunk('exhibits/fetchAll', async (page: num
     try {
         const res = await getAllExhibits(page);
 
-        console.log(res.data);
         return res.data;
     } catch (error) {
         console.log('Error:' + error);
@@ -50,7 +45,6 @@ export const fetchMyPosts = createAsyncThunk('exhibits/fetchMyPosts', async (pag
     try {
         const res = await getMyExhibits(page);
 
-        console.log(res.data);
         return res.data;
     } catch (error) {
         console.log('Error:' + error);
@@ -69,8 +63,6 @@ export const sendPost = createAsyncThunk(
 
             const res = await createPost(formData);
 
-            console.log(res.data);
-            console.log('Post successfully created');
 
             return res.data;
         } catch (error) {
@@ -144,7 +136,6 @@ const exhibitSlice = createSlice({
             .addCase(sendPost.fulfilled, (state, action) => {
                 state.isLoading = false;
                 state.items.push(action.payload);
-                console.log(action.payload);
             })
             .addCase(sendPost.rejected, (state) => {
                 state.error = true;
@@ -157,7 +148,6 @@ const exhibitSlice = createSlice({
             })
             .addCase(deletePost.fulfilled, (state, action) => {
                 state.isLoading = false;
-                console.log(action);
                 state.items = state.items.filter(item => item.id !== action.payload);
                 state.myItems = state.myItems.filter(item => item.id !== action.payload);
             })

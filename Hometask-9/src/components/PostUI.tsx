@@ -1,7 +1,6 @@
 import { Box, Button, TextField } from "@mui/material"
 import type { CommentInterface } from "../store/slices/commentSlice";
 import type { User } from "../store/slices/userSlice";
-import type { User as ExhibitUser } from "../store/slices/exhibitSlices";
 
 import CommentStripe from "./CommentStripe";
 
@@ -12,7 +11,7 @@ interface Props {
         imageUrl: string;
         description: string;
         commentCount: number;
-        user: ExhibitUser
+        user: User
     };
     onShowComments: (id: number) => void,
     handleDeletePost: (id: number) => void,
@@ -20,10 +19,11 @@ interface Props {
     user: User | null,
     newComment: string;
     setNewComment: (text: string) => void;
-    handleAddComment: () => void;
+    handleAddComment: () => void,
+    isLoadingComments: boolean;
 }
 
-const PostUI = ({ item, onShowComments, handleDeletePost, comments, user, newComment, setNewComment, handleAddComment }: Props) => {
+const PostUI = ({ item, onShowComments, handleDeletePost, comments, user, newComment, setNewComment, handleAddComment, isLoadingComments }: Props) => {
 
     const formattedDate = new Date(item.createdAt).toLocaleString();
 
@@ -58,20 +58,26 @@ const PostUI = ({ item, onShowComments, handleDeletePost, comments, user, newCom
                     display: 'flex',
                     gap: '10px'
                 }}>
-                    {/* <button>Add comment</button> */}
-                    <button onClick={() => onShowComments(item.id)}>
-                        {comments.length > 0 ? 'close comments' : 'show comments'}
-                    </button>
+                    {item.commentCount > 0
+                        ? <Button variant="contained" onClick={() => onShowComments(item.id)}>
+                            {comments.length > 0 ? 'close comments' : 'show comments'}
+                        </Button>
+                        : null
+                    }
+
                     {user?.id === item.user?.id && (
-                        <button onClick={() => handleDeletePost(item.id)}>Delete</button>
+                        <Button variant="contained" onClick={() => handleDeletePost(item.id)}>Delete</Button>
                     )}
                 </Box>
             </Box>
 
-            {comments.length > 0
-                ? <CommentStripe comments={comments} />
-                : null
-            }
+            {isLoadingComments
+                ? <Box sx={{ marginTop: "10px", textAlign: "center" }}>
+                    Loading comments...
+                </Box>
+                : comments.length > 0
+                    ? <CommentStripe comments={comments} />
+                    : null}
 
             {user && (
                 <Box sx={{ marginTop: "10px", display: "flex", gap: "10px" }}>

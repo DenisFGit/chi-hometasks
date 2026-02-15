@@ -16,6 +16,7 @@ const Navigation = () => {
     return (
         <Box sx={{
             position: 'fixed',
+            zIndex: '3',
             width: '100%',
             display: 'flex',
             justifyContent: 'space-between',

@@ -4,7 +4,7 @@ import { login, register, getMe } from '../../api/userActions.ts';
 
 export interface User {
     id: number;
-    name: string;
+    username: string;
 }
 
 export interface UserState {
@@ -32,7 +32,6 @@ export const loginUser = createAsyncThunk(
 
             localStorage.setItem("accessToken", res.data.access_token);
 
-            console.log(res.data);
             return res.data;
         } catch (error) {
             const err = error as AxiosError<{ message: string }>;
@@ -48,7 +47,6 @@ export const registerUser = createAsyncThunk(
 
             const res = await register(data);
 
-            console.log(res.data);
             return res.data;
         } catch (error) {
             const err = error as AxiosError<{ message: string }>;
@@ -94,10 +92,9 @@ const userSlice = createSlice({
             })
             .addCase(loginUser.fulfilled, (state, action) => {
                 state.isLoading = false;
-                // console.log(action);
                 state.user = {
                     id: action.payload.userId,
-                    name: action.payload.userName
+                    username: action.payload.userName
                 }
                 console.log(state.user);
                 state.token = action.payload.access_token;
@@ -116,10 +113,10 @@ const userSlice = createSlice({
                 state.isLoading = false;
                 state.user = {
                     id: action.payload.id,
-                    name: action.payload.username,
+                    username: action.payload.username,
                 };
-
             })
+
             .addCase(registerUser.rejected, (state, action) => {
                 state.isLoading = false;
                 state.error = action.payload as string;

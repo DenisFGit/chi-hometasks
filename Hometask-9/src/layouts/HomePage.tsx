@@ -21,9 +21,6 @@ const HomePage = () => {
     const posts = useAppSelector((state) => state.exhibits.myItems);
     const isLoading = useAppSelector((state) => state.exhibits.isLoading);
 
-    const user = useAppSelector((state) => state.user.user);
-    console.log(user);
-
 
     const changePage = (newPage: number) => {
         setSearchParams({ page: String(newPage) });
@@ -46,33 +43,38 @@ const HomePage = () => {
     }, [pageNum, dispatch]);
 
 
+    if (isLoading) {
+        return (
+            <Box sx={{ textAlign: 'center', fontSize: '30px' }}>
+                Loading my exhibits...
+            </Box>
+        );
+    }
+
+    if (!posts || posts.length === 0) {
+        return (
+            <div className="home">
+                <h1 className="home__title">Home page</h1>
+                There are no my exhibits available
+            </div>
+        );
+    }
+
+
     return (
         <div className="home">
             <h1 className="home__title">Home page</h1>
             <h3 className="home__subtitle">My Posts</h3>
-            {isLoading
-                ? <Box sx={{
-                    textAlign: 'center',
-                    fontSize: '30px'
-                }}>
-                    Loading exhibits...
-                </Box>
-                : <>
-                    <Pagination pageNum={pageNum} lastPage={lastPage} changePage={changePage} />
 
-                    <div className="home__content">
-                        {
-                            posts && posts.length > 0
-                                ? posts.map((item) => {
-                                    return <Post key={item.id} item={item} />
-                                })
-                                : null
-                        }
-                    </div>
+            <Pagination pageNum={pageNum} lastPage={lastPage} changePage={changePage} />
 
-                    <Pagination pageNum={pageNum} lastPage={lastPage} changePage={changePage} />
+            <div className="stripe__content">
+                {posts.map((item) => (
+                    <Post key={item.id} item={item} />
+                ))}
+            </div>
 
-                </>}
+            <Pagination pageNum={pageNum} lastPage={lastPage} changePage={changePage} />
         </div>
     )
 }

@@ -1,14 +1,10 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
 import { getComments, createComment } from '../../api/commentActions';
+import type { User } from './userSlice';
 
 interface CommentPayload {
     postId: number;
     text: string;
-}
-
-interface User {
-    id: number;
-    username: string;
 }
 
 export interface CommentInterface {
@@ -72,7 +68,6 @@ const commentSlice = createSlice({
                 const { postId, comments } = action.payload;
 
                 state.commentsByPostId[postId] = comments;
-
 
             })
             .addCase(fetchComments.rejected, (state) => {
