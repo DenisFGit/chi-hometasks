@@ -31,30 +31,36 @@ const initialState: ExhibitState = {
     error: null,
 };
 
-export const fetchPosts = createAsyncThunk('exhibits/fetchAll', async (page: number) => {
-    try {
-        const res = await getAllExhibits(page);
-
-        return res.data;
-    } catch (error) {
-        console.log('Error:' + error);
+export const fetchPosts = createAsyncThunk(
+    'exhibits/fetchAll',
+    async (page: number, { rejectWithValue }) => {
+        try {
+            const res = await getAllExhibits(page);
+            return res.data;
+        } catch (error) {
+            const err = error as AxiosError<{ message: string }>;
+            return rejectWithValue(err.response?.data || "Fetch failed");
+        }
     }
-});
+);
 
-export const fetchMyPosts = createAsyncThunk('exhibits/fetchMyPosts', async (page: number) => {
-    try {
-        const res = await getMyExhibits(page);
+export const fetchMyPosts = createAsyncThunk(
+    'exhibits/fetchMyPosts',
+    async (page: number, { rejectWithValue }) => {
+        try {
+            const res = await getMyExhibits(page);
 
-        return res.data;
-    } catch (error) {
-        console.log('Error:' + error);
-    }
-});
+            return res.data;
+        } catch (error) {
+            const err = error as AxiosError<{ message: string }>;
+            return rejectWithValue(err.response?.data || "Fetch failed");
+        }
+    });
 
 
 export const sendPost = createAsyncThunk(
     'exhibits/sendPost',
-    async (post: Post) => {
+    async (post: Post, { rejectWithValue }) => {
 
         try {
             const formData = new FormData();
@@ -66,7 +72,8 @@ export const sendPost = createAsyncThunk(
 
             return res.data;
         } catch (error) {
-            console.log('Error:' + error);
+            const err = error as AxiosError<{ message: string }>;
+            return rejectWithValue(err.response?.data || "Fetch failed");
         }
     }
 )
@@ -113,6 +120,7 @@ const exhibitSlice = createSlice({
                 state.items = action.payload.data;
             })
             .addCase(fetchPosts.rejected, (state) => {
+                state.isLoading = false;
                 state.error = true;
             })
 
@@ -126,6 +134,11 @@ const exhibitSlice = createSlice({
             .addCase(fetchMyPosts.fulfilled, (state, action) => {
                 state.isLoading = false;
                 state.myItems = action.payload.data;
+            })
+
+            .addCase(fetchMyPosts.rejected, (state) => {
+                state.isLoading = false;
+                state.error = true;
             })
 
             // Create post

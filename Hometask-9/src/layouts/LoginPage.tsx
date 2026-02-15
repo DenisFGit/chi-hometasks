@@ -16,6 +16,8 @@ const LoginPage = () => {
         (state) => Boolean(state.user.token)
     );
 
+    const error = useAppSelector((state) => state.user.error);
+
     const formik = useFormik({
         initialValues: {
             username: '',
@@ -42,6 +44,7 @@ const LoginPage = () => {
         },
     });
 
+
     return (
         <div>
             <Typography variant="h1"
@@ -51,6 +54,14 @@ const LoginPage = () => {
                     marginTop: '20px'
                 }}>LoginPage
             </Typography>
+            {error
+                ? <Box sx={{
+                    textAlign: 'center'
+                }}>Invalid username or password
+                </Box>
+                : null
+            }
+
             {isAuthenticated
                 ? <Typography variantMapping={{ body1: 'p' }}
                     sx={{

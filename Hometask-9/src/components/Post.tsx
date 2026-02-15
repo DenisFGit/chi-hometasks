@@ -32,14 +32,22 @@ const Post = ({ item }: Props) => {
     const [isOpen, setIsOpen] = useState(false);
     const [newComment, setNewComment] = useState("");
     const [isLoadingComments, setIsLoadingComments] = useState(false);
+    const [fetchError, setFetchError] = useState<string | null>(null);
+    const [addCommentError, setAddCommentError] = useState<string | null>(null);
+
 
     const handleComments = async (id: number) => {
         setIsOpen((prev) => !prev);
 
         if (!comments || comments.length === 0) {
             setIsLoadingComments(true);
+            setFetchError(null); // Clear previous errors
+
             try {
                 await dispatch(fetchComments(id)).unwrap();
+            } catch (error) {
+                console.error('Failed to fetch comments:', error);
+                setFetchError('Failed to load comments. Please try again.');
             } finally {
                 setIsLoadingComments(false);
             }
@@ -58,13 +66,14 @@ const Post = ({ item }: Props) => {
 
     const handleAddComment = async () => {
         if (!newComment.trim()) return;
-
+        setAddCommentError(null); // Clear previous errors
         try {
             await dispatch(addComment({ postId: item.id, text: newComment })).unwrap();
             dispatch(incrementCommentCount(item.id));
             setNewComment("");
         } catch (error) {
             console.log("Failed to add comment:", error);
+            setAddCommentError('Failed to add comment. Please try again.');
         }
     };
 
@@ -79,6 +88,8 @@ const Post = ({ item }: Props) => {
             setNewComment={setNewComment}
             handleAddComment={handleAddComment}
             isLoadingComments={isLoadingComments}
+            fetchError={fetchError}
+            addCommentError={addCommentError}
         />
     );
 };

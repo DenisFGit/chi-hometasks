@@ -1,6 +1,6 @@
 
 import { registerUser } from "../store/slices/userSlice";
-import { useAppDispatch } from "../store/hooks";
+import { useAppDispatch, useAppSelector } from "../store/hooks";
 import { useNavigate } from "react-router-dom";
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
@@ -11,6 +11,9 @@ const RegisterPage = () => {
 
     const dispatch = useAppDispatch();
     const navigate = useNavigate();
+
+    const error = useAppSelector((state) => state.user.error)
+    const registeredUser = useAppSelector((state) => state.user.user);
 
     const formik = useFormik({
         initialValues: {
@@ -48,6 +51,24 @@ const RegisterPage = () => {
                 }}>
                 RegisterPage
             </Typography>
+            {
+                registeredUser
+                    ? <p style={{ textAlign: 'center', marginTop: '10px' }}>
+                        User registered successfully
+                    </p>
+                    : <p style={{ textAlign: 'center', marginTop: '10px' }}>
+                        Enter username and password to register the user
+                    </p>
+            }
+
+            {error
+                ? <Box sx={{
+                    textAlign: 'center'
+                }}>Error during user registering
+                </Box>
+                : null
+            }
+
             <Box
                 component='section'
                 sx={{

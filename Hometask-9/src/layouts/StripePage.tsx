@@ -14,6 +14,7 @@ const StripePage = () => {
 
     const posts = useAppSelector((state) => state.exhibits.items);
     const isLoading = useAppSelector((state) => state.exhibits.isLoading);
+    const error = useAppSelector((state) => state.exhibits.error);
 
     const pageNum = Number(searchParams.get("page")) || 1;
     const [lastPage, setLastPage] = useState<number>(1);
@@ -40,6 +41,14 @@ const StripePage = () => {
         return (
             <Box sx={{ textAlign: 'center', fontSize: '30px' }}>
                 Loading exhibits...
+            </Box>
+        );
+    }
+
+    if (error) {
+        return (
+            <Box sx={{ textAlign: 'center', fontSize: '30px' }}>
+                Error in fetching exhibits...
             </Box>
         );
     }

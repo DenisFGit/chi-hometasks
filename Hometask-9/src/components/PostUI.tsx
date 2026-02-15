@@ -21,9 +21,11 @@ interface Props {
     setNewComment: (text: string) => void;
     handleAddComment: () => void,
     isLoadingComments: boolean;
+    fetchError: string | null;
+    addCommentError: string | null;
 }
 
-const PostUI = ({ item, onShowComments, handleDeletePost, comments, user, newComment, setNewComment, handleAddComment, isLoadingComments }: Props) => {
+const PostUI = ({ item, onShowComments, handleDeletePost, comments, user, newComment, setNewComment, handleAddComment, isLoadingComments, fetchError, addCommentError }: Props) => {
 
     const formattedDate = new Date(item.createdAt).toLocaleString();
 
@@ -71,6 +73,14 @@ const PostUI = ({ item, onShowComments, handleDeletePost, comments, user, newCom
                 </Box>
             </Box>
 
+
+            {fetchError && (
+                <Box sx={{ marginTop: "10px" }}>
+                    {fetchError}
+                </Box>
+            )}
+
+
             {isLoadingComments
                 ? <Box sx={{ marginTop: "10px", textAlign: "center" }}>
                     Loading comments...
@@ -80,20 +90,29 @@ const PostUI = ({ item, onShowComments, handleDeletePost, comments, user, newCom
                     : null}
 
             {user && (
-                <Box sx={{ marginTop: "10px", display: "flex", gap: "10px" }}>
-                    <TextField
-                        size="small"
-                        fullWidth
-                        placeholder="Write a comment..."
-                        value={newComment}
-                        onChange={(e) => setNewComment(e.target.value)}
-                    />
-                    <Button variant="contained" onClick={handleAddComment}>
-                        Add
-                    </Button>
-                </Box>
-            )}
+                <>
+                    {/* Show add comment error */}
+                    {addCommentError && (
+                        <Box sx={{ marginTop: "10px" }}>
+                            {addCommentError}
+                        </Box>
+                    )}
 
+                    <Box sx={{ marginTop: "10px", display: "flex", gap: "10px" }}>
+                        <TextField
+                            size="small"
+                            fullWidth
+                            placeholder="Write a comment..."
+                            value={newComment}
+                            onChange={(e) => setNewComment(e.target.value)}
+                            error={!!addCommentError}
+                        />
+                        <Button variant="contained" onClick={handleAddComment}>
+                            Add
+                        </Button>
+                    </Box>
+                </>
+            )}
 
         </Box>
     );

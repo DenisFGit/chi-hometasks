@@ -3,7 +3,7 @@ import * as Yup from "yup";
 
 import { Box, Button, TextField, Typography } from "@mui/material";
 
-import { useAppDispatch } from "../store/hooks";
+import { useAppDispatch, useAppSelector } from "../store/hooks";
 import { sendPost } from "../store/slices/exhibitSlices";
 
 import { useNavigate } from "react-router-dom";
@@ -18,6 +18,8 @@ const NewPost = () => {
 
     const dispatch = useAppDispatch();
     const navigate = useNavigate();
+
+    const error = useAppSelector((state) => state.exhibits.error);
 
     const formik = useFormik<NewPostValues>({
         initialValues: {
@@ -57,10 +59,19 @@ const NewPost = () => {
                 New post page
             </Typography>
 
+            {error
+                ? <p style={{ textAlign: 'center', marginTop: '10px' }}>
+                    Error while creating a post
+                </p>
+                : <p style={{ textAlign: 'center', marginTop: '10px' }}>
+                    Add image and description no create new post
+                </p>
+            }
+
             <Box
                 component="form"
                 onSubmit={formik.handleSubmit}
-                sx={{ display: "flex", flexDirection: "column", gap: 2 }}
+                sx={{ display: "flex", flexDirection: "column", gap: 2, marginTop: '10px' }}
             >
                 <input
                     type="file"

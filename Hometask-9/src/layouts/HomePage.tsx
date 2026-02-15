@@ -20,6 +20,7 @@ const HomePage = () => {
 
     const posts = useAppSelector((state) => state.exhibits.myItems);
     const isLoading = useAppSelector((state) => state.exhibits.isLoading);
+    const error = useAppSelector((state) => state.exhibits.error);
 
 
     const changePage = (newPage: number) => {
@@ -42,7 +43,6 @@ const HomePage = () => {
 
     }, [pageNum, dispatch]);
 
-
     if (isLoading) {
         return (
             <Box sx={{ textAlign: 'center', fontSize: '30px' }}>
@@ -51,11 +51,24 @@ const HomePage = () => {
         );
     }
 
+    if (error) {
+        return (
+            <Box sx={{ textAlign: 'center', fontSize: '30px' }}>
+                Error in fetching my exhibits...
+            </Box>
+        );
+    }
+
+
     if (!posts || posts.length === 0) {
         return (
             <div className="home">
                 <h1 className="home__title">Home page</h1>
-                There are no my exhibits available
+                <h3 className="home__subtitle">My Posts</h3>
+                <Box sx={{ textAlign: 'center', fontSize: '30px' }}>
+                    You haven’t added any exhibits yet.
+                </Box>
+
             </div>
         );
     }
