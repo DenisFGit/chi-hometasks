@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { useAppDispatch, useAppSelector } from "../store/hooks";
-import { fetchComments, addComment } from "../store/slices/commentSlice";
+import { fetchComments, addComment, deleteExhibitComment } from "../store/slices/commentSlice";
 import { deletePost } from "../store/slices/exhibitSlices";
-import { incrementCommentCount } from "../store/slices/exhibitSlices";
+import { incrementCommentCount, decrementCommentCount } from "../store/slices/exhibitSlices";
 import type { User } from '../store/slices/userSlice'
 
 import PostUI from "./PostUI";
@@ -25,6 +25,8 @@ const Post = ({ item }: Props) => {
         (state) => state.comments.commentsByPostId[item.id]
     );
 
+    // const commentsByPostId = useAppSelector((state) => state.comments.commentsByPostId);
+
     const user = useAppSelector((state) => state.user.user);
 
     const safeComments = comments ?? [];
@@ -35,24 +37,22 @@ const Post = ({ item }: Props) => {
     const [fetchError, setFetchError] = useState<string | null>(null);
     const [addCommentError, setAddCommentError] = useState<string | null>(null);
 
-
     const handleComments = async (id: number) => {
         setIsOpen((prev) => !prev);
 
-        if (!comments || comments.length === 0) {
-            setIsLoadingComments(true);
-            setFetchError(null);
+        setIsLoadingComments(true);
+        setFetchError(null);
 
-            try {
-                await dispatch(fetchComments(id)).unwrap();
-            } catch (error) {
-                console.error('Failed to fetch comments:', error);
-                setFetchError('Failed to load comments. Please try again.');
-            } finally {
-                setIsLoadingComments(false);
-            }
+        try {
+            await dispatch(fetchComments(id)).unwrap();
+        } catch (error) {
+            console.error('Failed to fetch comments:', error);
+            setFetchError('Failed to load comments. Please try again.');
+        } finally {
+            setIsLoadingComments(false);
         }
     };
+
 
     const handleDeletePost = (id: number) => {
         try {
@@ -77,6 +77,17 @@ const Post = ({ item }: Props) => {
         }
     };
 
+    const handleDeleteComment = async (postId: number, commentId: number) => {
+        try {
+            await dispatch(deleteExhibitComment({ postId, commentId }));
+            await dispatch(decrementCommentCount(postId));
+        } catch (error) {
+            console.log('Error:' + error);
+        }
+        console.log(postId);
+        console.log(commentId);
+    }
+
     return (
         <PostUI
             item={item}
@@ -87,6 +98,7 @@ const Post = ({ item }: Props) => {
             newComment={newComment}
             setNewComment={setNewComment}
             handleAddComment={handleAddComment}
+            handleDeleteComment={handleDeleteComment}
             isLoadingComments={isLoadingComments}
             fetchError={fetchError}
             addCommentError={addCommentError}

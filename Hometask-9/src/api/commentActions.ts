@@ -7,3 +7,7 @@ export const getComments = async (comment_id: number) => {
 export const createComment = async (postId: number, text: string) => {
     return apiClient.post(`/api/exhibits/${postId}/comments`, { text });
 }
+
+export const deleteComment = async (exhibitId: number, commentId: number) => {
+    return apiClient.delete(`/api/exhibits/${exhibitId}/comments/${commentId}`);
+}

@@ -20,12 +20,13 @@ interface Props {
     newComment: string;
     setNewComment: (text: string) => void;
     handleAddComment: () => void,
+    handleDeleteComment: (postId: number, commentId: number) => void,
     isLoadingComments: boolean;
     fetchError: string | null;
     addCommentError: string | null;
 }
 
-const PostUI = ({ item, onShowComments, handleDeletePost, comments, user, newComment, setNewComment, handleAddComment, isLoadingComments, fetchError, addCommentError }: Props) => {
+const PostUI = ({ item, onShowComments, handleDeletePost, comments, user, newComment, setNewComment, handleAddComment, handleDeleteComment, isLoadingComments, fetchError, addCommentError }: Props) => {
 
     const formattedDate = new Date(item.createdAt).toLocaleString();
 
@@ -86,7 +87,11 @@ const PostUI = ({ item, onShowComments, handleDeletePost, comments, user, newCom
                     Loading comments...
                 </Box>
                 : comments.length > 0
-                    ? <CommentStripe comments={comments} />
+                    ? <CommentStripe
+                        comments={comments}
+                        handleDeleteComment={handleDeleteComment}
+                        user={user}
+                        itemId={item.id} />
                     : null}
 
             {user && (

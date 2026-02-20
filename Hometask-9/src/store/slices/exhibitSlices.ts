@@ -106,6 +106,16 @@ const exhibitSlice = createSlice({
             if (myPost) myPost.commentCount += 1;
         },
 
+        decrementCommentCount: (state, action: { payload: number }) => {
+            const postId = action.payload;
+
+            const post = state.items.find((p) => p.id === postId);
+            if (post) post.commentCount -= 1;
+
+            const myPost = state.myItems.find((p) => p.id === postId);
+            if (myPost) myPost.commentCount -= 1;
+        },
+
     },
     extraReducers: (builder) => {
         builder
@@ -173,5 +183,5 @@ const exhibitSlice = createSlice({
 
 })
 
-export const { incrementCommentCount } = exhibitSlice.actions;
+export const { incrementCommentCount, decrementCommentCount } = exhibitSlice.actions;
 export default exhibitSlice.reducer;

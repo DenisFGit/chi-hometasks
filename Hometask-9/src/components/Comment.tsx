@@ -1,4 +1,4 @@
-import { Box } from "@mui/material"
+import { Box, Button } from "@mui/material"
 import type { User } from '../store/slices/userSlice';
 
 interface Props {
@@ -7,15 +7,18 @@ interface Props {
         createdAt: string,
         text: string,
         user: User
-    }
+    },
+    user: User | null,
+    itemId: number,
+    handleDeleteComment: (postId: number, commentId: number) => void,
 }
 
-const Comment = ({ comment }: Props) => {
+const Comment = ({ comment, handleDeleteComment, user, itemId }: Props) => {
 
     const formattedDate = new Date(comment.createdAt).toLocaleString();
 
-
     return (
+
         <Box sx={{
             bgcolor: 'pink',
             padding: '8px',
@@ -26,6 +29,12 @@ const Comment = ({ comment }: Props) => {
                 <p>User: {comment.user.username}</p>
                 <p>Description: {comment.text}</p>
             </Box>
+            {user?.id === comment.user.id
+                ? <Button variant="contained"
+                    onClick={() => handleDeleteComment(itemId, comment.id)}>
+                    Delete
+                </Button>
+                : null}
         </Box>
     )
 }

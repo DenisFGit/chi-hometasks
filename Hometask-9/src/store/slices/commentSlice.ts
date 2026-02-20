@@ -1,6 +1,12 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
-import { getComments, createComment } from '../../api/commentActions';
+import { getComments, createComment, deleteComment } from '../../api/commentActions';
 import type { User } from './userSlice';
+import { AxiosError } from 'axios';
+
+interface DeleteComment {
+    postId: number,
+    commentId: number
+}
 
 interface CommentPayload {
     postId: number;
@@ -52,6 +58,19 @@ export const addComment = createAsyncThunk(
     }
 );
 
+export const deleteExhibitComment = createAsyncThunk(
+    "comments/deleteExhibitComment", // ← fixed duplicate action type
+    async ({ postId, commentId }: DeleteComment, { rejectWithValue }) => {
+        try {
+            await deleteComment(postId, commentId);
+            return { postId, commentId };
+        } catch (error) {
+            const err = error as AxiosError<{ message: string }>;
+            return rejectWithValue(err.response?.data || "Failed to delete");
+        }
+    }
+)
+
 const commentSlice = createSlice({
     name: 'comments',
     initialState,
@@ -93,6 +112,26 @@ const commentSlice = createSlice({
                 state.commentsByPostId[postId].push(comment);
             })
             .addCase(addComment.rejected, (state) => {
+                state.isLoading = false;
+                state.error = true;
+            })
+
+            .addCase(deleteExhibitComment.pending, (state) => {
+                state.isLoading = true;
+                state.error = null;
+            })
+            .addCase(deleteExhibitComment.fulfilled, (state, action) => {
+                state.isLoading = false;
+
+                const { postId, commentId } = action.payload;
+
+                if (state.commentsByPostId[postId]) {
+                    state.commentsByPostId[postId] = state.commentsByPostId[postId].filter(
+                        (comment) => comment.id !== commentId
+                    );
+                }
+            })
+            .addCase(deleteExhibitComment.rejected, (state) => {
                 state.isLoading = false;
                 state.error = true;
             })
