@@ -25,16 +25,22 @@ const Comment = ({ comment, handleDeleteComment, user, itemId }: Props) => {
             borderRadius: '8px',
         }}>
             <p>Created: {formattedDate}</p>
-            <Box>
-                <p>User: {comment.user.username}</p>
-                <p>Description: {comment.text}</p>
+            <Box sx={{
+                display: 'flex',
+                justifyContent: 'space-between'
+            }}>
+                <Box>
+                    <p>User: {comment.user.username}</p>
+                    <p>Description: {comment.text}</p>
+                </Box>
+                {user?.id === comment.user.id
+                    ? <Button variant="contained"
+                        onClick={() => handleDeleteComment(itemId, comment.id)}>
+                        Delete
+                    </Button>
+                    : null
+                }
             </Box>
-            {user?.id === comment.user.id
-                ? <Button variant="contained"
-                    onClick={() => handleDeleteComment(itemId, comment.id)}>
-                    Delete
-                </Button>
-                : null}
         </Box>
     )
 }

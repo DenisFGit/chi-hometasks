@@ -11,6 +11,8 @@ import Navigation from "./components/Navigation";
 import { useAppSelector, useAppDispatch } from './store/hooks';
 import { useEffect } from 'react';
 import { fetchCurrentUser } from './store/slices/userSlice';
+import { SocketProvider } from './hooks/SocketProvider';
+import { Toaster } from 'react-hot-toast';
 
 import './App.css'
 
@@ -46,19 +48,22 @@ function App() {
     <div className="app">
 
       <Router>
-        <Navigation />
-        <div className="container">
-          <Routes>
-            <Route path="/login" element={<LoginPage />} />
-            <Route path="/register" element={<RegisterPage />} />
-            <Route path='/' element={<StripePage />} />
+        <SocketProvider>
+          <Toaster position="top-center" />
+          <Navigation />
+          <div className="container">
+            <Routes>
+              <Route path="/login" element={<LoginPage />} />
+              <Route path="/register" element={<RegisterPage />} />
+              <Route path='/' element={<StripePage />} />
 
-            <Route element={<ProtectedRoute isAllowed={isAuthenticated} />}>
-              <Route path='/home' element={<HomePage />} />
-              <Route path='/new-post' element={<NewPost />} />
-            </Route>
-          </Routes>
-        </div>
+              <Route element={<ProtectedRoute isAllowed={isAuthenticated} />}>
+                <Route path='/home' element={<HomePage />} />
+                <Route path='/new-post' element={<NewPost />} />
+              </Route>
+            </Routes>
+          </div>
+        </SocketProvider>
       </Router>
 
     </div>

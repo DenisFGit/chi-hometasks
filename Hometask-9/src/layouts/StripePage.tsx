@@ -7,7 +7,11 @@ import Pagination from "../components/Pagination";
 import Post from "../components/Post";
 import "./StripePage.scss";
 
+// import { useNewPostSocket } from "../hooks/useNewPostSocket";
+
 const StripePage = () => {
+
+    // useNewPostSocket();
 
     const [searchParams, setSearchParams] = useSearchParams();
     const dispatch = useAppDispatch();

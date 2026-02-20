@@ -11,7 +11,7 @@ interface Props {
 }
 
 const CommentStripe = ({ comments, handleDeleteComment, user, itemId }: Props) => {
-    console.log(comments);
+
     return (
         <Box sx={{
             marginTop: '10px',

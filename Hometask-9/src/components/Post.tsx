@@ -25,8 +25,6 @@ const Post = ({ item }: Props) => {
         (state) => state.comments.commentsByPostId[item.id]
     );
 
-    // const commentsByPostId = useAppSelector((state) => state.comments.commentsByPostId);
-
     const user = useAppSelector((state) => state.user.user);
 
     const safeComments = comments ?? [];
@@ -84,8 +82,6 @@ const Post = ({ item }: Props) => {
         } catch (error) {
             console.log('Error:' + error);
         }
-        console.log(postId);
-        console.log(commentId);
     }
 
     return (
